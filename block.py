@@ -12,13 +12,16 @@ class Block(pygame.sprite.Sprite):
     
     Attributes
     ----------
-    pos : pygame.Vector2
+    pos : pygame.math.Vector2
         the positon of the block in the world
+
     size : int
         the size of the square block (size * size)
+
     image : pygame.Surface
         the image object that gets rendered to the screen
-    rect : pygame.Rect
+
+    rect : pygame.sprite.Rect
         object that holds all of the position and collision data of the block
     
     Methods

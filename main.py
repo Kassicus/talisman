@@ -5,6 +5,7 @@ import pygame
 import lib
 import debug
 import block
+import player
 
 pygame.init() # initialize the pygame module
 
@@ -27,6 +28,9 @@ class Game:
 
     debug_interface : debug.DebugInterface
         information overlay toggled with [TAB]
+
+    terrain : pygame.sprite.Group
+        contains the terrain blocks
 
     Methods
     -------
@@ -58,10 +62,14 @@ class Game:
         self.clock = pygame.time.Clock()
         lib.events = pygame.event.get() # initializing the lib.events list (NONE at start)
 
-        self.terrain = pygame.sprite.Group() # test group for the blocks
-
         self.debug_interface = debug.DebugInterface()
+
+        self.terrain = pygame.sprite.Group() # test group for the blocks
         self.generate_terrain(0, 604)
+
+        self.player_camera = pygame.sprite.Group()
+        self.player = player.Player(100, 100)
+        self.player_camera.add(self.player)
 
     def generate_terrain(self, x_offset: int, y_offset: int):
         """
@@ -85,6 +93,26 @@ class Game:
             for y in range(15):
                 b = block.Block(int(x * 32) + x_offset, int(y * 32) + y_offset)
                 self.terrain.add(b)
+
+    def terrain_collision(self):
+        """
+        handle collisions between the player and the terrain objects
+        
+        ...
+        
+        Returns
+        -------
+        None
+        """
+
+        collision_tollerance = 10
+
+        for t in self.terrain:
+            if self.player.rect.colliderect(t.rect):
+                if abs(self.player.rect.bottom - t.rect.top) < collision_tollerance:
+                    self.player.falling = False
+                    self.player.vel.y = 0
+                    self.player.pos.y = t.rect.top - self.player.rect.height / 2
 
     def run(self):
         """
@@ -156,7 +184,9 @@ class Game:
 
         self.screen.fill(lib.color.BLACK)
 
+        # draw sprite groups
         self.terrain.draw(self.screen)
+        self.player_camera.draw(self.screen)
 
         if self.debug_interface.active:
             self.debug_interface.draw()
@@ -172,8 +202,14 @@ class Game:
         None
         """
 
-        self.terrain.update()
+        # collision updates
+        self.terrain_collision()
 
+        # update sprite groups
+        self.terrain.update()
+        self.player.update()
+
+        # update game management systems
         self.debug_interface.update(self.clock)
         pygame.display.update()
         lib.delta_time = self.clock.tick(lib.framerate) / 1000

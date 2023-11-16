@@ -7,6 +7,8 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 SCREEN_TITLE = "Project Talisman"
 
+GRAVITY = 10
+
 class Colors:
     """
     contains color objects and methods for creating random colors
