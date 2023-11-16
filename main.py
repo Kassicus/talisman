@@ -4,6 +4,7 @@ import pygame
 # project file imports
 import lib
 import debug
+import block
 
 pygame.init() # initialize the pygame module
 
@@ -57,7 +58,33 @@ class Game:
         self.clock = pygame.time.Clock()
         lib.events = pygame.event.get() # initializing the lib.events list (NONE at start)
 
+        self.terrain = pygame.sprite.Group() # test group for the blocks
+
         self.debug_interface = debug.DebugInterface()
+        self.generate_terrain(0, 604)
+
+    def generate_terrain(self, x_offset: int, y_offset: int):
+        """
+        creates the terrain, mostly a testing function currently
+        
+        ...
+
+        Parameters
+        ----------
+        x_offset : int
+            the horizontal offset of the terrain group
+        y_offset : int
+            the vertical offset of the terrain group
+        
+        Returns
+        -------
+        None
+        """
+
+        for x in range(60):
+            for y in range(15):
+                b = block.Block(int(x * 32) + x_offset, int(y * 32) + y_offset)
+                self.terrain.add(b)
 
     def run(self):
         """
@@ -129,6 +156,8 @@ class Game:
 
         self.screen.fill(lib.color.BLACK)
 
+        self.terrain.draw(self.screen)
+
         if self.debug_interface.active:
             self.debug_interface.draw()
 
@@ -142,6 +171,8 @@ class Game:
         -------
         None
         """
+
+        self.terrain.update()
 
         self.debug_interface.update(self.clock)
         pygame.display.update()
