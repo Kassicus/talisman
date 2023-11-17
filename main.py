@@ -110,13 +110,29 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.player, self.terrain, False)
 
         for block in collisions:
+            if abs(self.player.rect.left - block.rect.right) < collision_tollerance:
+                self.player.vel.x = 0
+                self.player.pos.x = block.rect.right + (self.player.rect.width / 2)
+
+            if abs(self.player.rect.right - block.rect.left) < collision_tollerance:
+                self.player.vel.x = 0
+                self.player.pos.x = block.rect.left - (self.player.rect.width / 2)
+
+            if abs(self.player.rect.top - block.rect.bottom) < collision_tollerance:
+                self.player.vel.y = 0
+                self.player.pos.y = block.rect.bottom + (self.player.rect.height / 2)
+
             if abs(self.player.rect.bottom - block.rect.top) < collision_tollerance:
-                self.player.falling = False
+                self.player.falling = False 
                 self.player.vel.y = 0
                 self.player.pos.y = block.rect.top - (self.player.rect.height / 2)
+        
+        if self.player.falling == False:
+            search_pos = pygame.math.Vector2(self.player.rect.centerx, self.player.rect.bottom)
+            closest_block = min([t for t in self.terrain], key=lambda t: search_pos.distance_to(t.pos))
 
-        if len(collisions) == 0:
-            self.player.falling = True         
+            if abs(self.player.rect.bottom - closest_block.rect.top) > 5 or abs(self.player.rect.centerx - closest_block.rect.centerx) > 32:
+                self.player.falling = True
 
     def run(self):
         """
