@@ -107,12 +107,16 @@ class Game:
 
         collision_tollerance = 10
 
-        for t in self.terrain:
-            if self.player.rect.colliderect(t.rect):
-                if abs(self.player.rect.bottom - t.rect.top) < collision_tollerance:
-                    self.player.falling = False
-                    self.player.vel.y = 0
-                    self.player.pos.y = t.rect.top - self.player.rect.height / 2
+        collisions = pygame.sprite.spritecollide(self.player, self.terrain, False)
+
+        for block in collisions:
+            if abs(self.player.rect.bottom - block.rect.top) < collision_tollerance:
+                self.player.falling = False
+                self.player.vel.y = 0
+                self.player.pos.y = block.rect.top - (self.player.rect.height / 2)
+
+        if len(collisions) == 0:
+            self.player.falling = True         
 
     def run(self):
         """

@@ -39,6 +39,7 @@ class Block(pygame.sprite.Sprite):
 
         self.pos = pygame.math.Vector2(x, y)
         self.size = 32
+        self.hovered = False
 
         self.image = pygame.Surface([self.size, self.size])
         self.image.fill(lib.color.random_custom("g"))
@@ -56,4 +57,19 @@ class Block(pygame.sprite.Sprite):
         None
         """
         
-        pass
+        self.interaction_controller()
+
+    def interaction_controller(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        if self.rect.left < mouse_x < self.rect.right:
+            if self.rect.top < mouse_y < self.rect.bottom:
+                self.hovered = True
+            else:
+                self.hovered = False
+        else:
+            self.hovered = False
+
+        if self.hovered:
+            if pygame.mouse.get_pressed()[0]:
+                self.kill()
