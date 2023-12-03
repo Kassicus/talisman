@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(x, y)
         self.vel = pygame.math.Vector2()
         self.size = pygame.math.Vector2(32, 64)
-        self.speed = 200
+        self.speed = 250
         self.falling = True
 
         self.image = pygame.Surface([self.size.x, self.size.y])

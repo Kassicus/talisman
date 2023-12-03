@@ -1,5 +1,6 @@
 # python module imports
 import pygame
+from random import randint
 
 # project file imports
 import lib
@@ -66,6 +67,7 @@ class Game:
 
         self.terrain = pygame.sprite.Group() # test group for the blocks
         self.generate_terrain(0, 604)
+        self.generate_trees(3)
 
         self.player_camera = pygame.sprite.Group()
         self.player = player.Player(100, 100)
@@ -93,6 +95,30 @@ class Game:
             for y in range(15):
                 b = block.Block(int(x * 32) + x_offset, int(y * 32) + y_offset)
                 self.terrain.add(b)
+
+    def generate_trees(self, count):
+        """
+        generates a set number of trees across the current terrain
+        
+        ...
+        
+        Parameters
+        ----------
+        count : int
+            the amount of trees to generate
+            
+        Returns
+        -------
+        None
+        """
+
+        for t in range(count):
+            x = randint(0, lib.SCREEN_WIDTH - 32)
+            
+            tree_height = randint(3, 5)
+            for b in range(tree_height):
+                log = block.Log(x, 604 - (b * 32) - 32)
+                self.terrain.add(log)
 
     def terrain_collision(self):
         """

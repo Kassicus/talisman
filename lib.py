@@ -40,6 +40,7 @@ class Colors:
 
         self.BLACK = pygame.Color(0, 0, 0, 255)
         self.WHITE = pygame.Color(255, 255, 255, 255)
+        self.LOG_BROWN = pygame.Color(64, 40, 13, 255)
 
     def random(self) -> pygame.Color:
         """
